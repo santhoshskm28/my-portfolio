@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Github, Monitor, Laptop, HelpCircle, UserCheck, CreditCard, Mail, ShieldAlert, Award, FileSpreadsheet } from "lucide-react";
+import { ExternalLink, Monitor, Laptop, HelpCircle, UserCheck, CreditCard, Mail, ShieldAlert, Award, FileSpreadsheet, Cpu } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 
 interface Project {
   id: string;
@@ -189,7 +190,7 @@ export default function Projects() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-transparent text-white border border-white/20 hover:border-white/80 hover:bg-white/5 px-5 py-2.5 rounded-full font-bold text-sm transition-all duration-300"
               >
-                GitHub <Github className="h-4 w-4" />
+                GitHub <FaGithub className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -301,7 +302,7 @@ export default function Projects() {
                       rel="noopener noreferrer"
                       className="text-xs text-zinc-400 hover:text-white flex items-center gap-1"
                     >
-                      <Github className="h-3.5 w-3.5" /> Repository
+                      <FaGithub className="h-3.5 w-3.5" /> Repository
                     </a>
                     <a
                       href={proj.liveLink}
