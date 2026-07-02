@@ -31,8 +31,8 @@ export default function Projects() {
       tech: [
         "React", "Node.js", "Express.js", "MongoDB", "Stripe", "Resend Email", "Docker", "Railway", "JWT", "REST API"
       ],
-      liveLink: "https://genai-course-platform.example.com",
-      githubLink: "https://github.com/santhoshskm28/genai-course-platform"
+      liveLink: "https://genaicourse.io/",
+      githubLink: "https://github.com/santhoshskm28/genaicourse-mern.git"
     },
     {
       id: "orca-studios",
@@ -47,7 +47,7 @@ export default function Projects() {
       tech: [
         "React", "Tailwind CSS", "HTML5", "CSS3", "Framer Motion", "Vite"
       ],
-      liveLink: "https://orcastudios.example.com",
+      liveLink: "https://orcastudios.netlify.app/",
       githubLink: "https://github.com/santhoshskm28/orca-studios"
     },
     {
@@ -201,16 +201,16 @@ export default function Projects() {
               <span className="h-2 w-2 rounded-full bg-neon-blue animate-pulse" />
               System Architecture Flow
             </h4>
-            
+
             <div className="flex flex-col gap-4 items-center">
               {/* Frontend Node */}
               <div className="w-full flex items-center justify-center p-3 rounded-xl border border-neon-blue/20 bg-neon-blue/5 text-neon-blue font-bold text-sm shadow-[0_0_10px_rgba(0,240,255,0.05)]">
                 Frontend (React & Tailwind)
               </div>
-              
+
               {/* Pulse line */}
               <div className="h-6 w-0.5 bg-gradient-to-b from-neon-blue to-neon-purple animate-pulse" />
-              
+
               {/* Backend Node */}
               <div className="w-full flex items-center justify-center p-3 rounded-xl border border-neon-purple/20 bg-neon-purple/5 text-neon-purple font-bold text-sm shadow-[0_0_10px_rgba(189,0,255,0.05)]">
                 API Layer (Node.js & Express)
@@ -270,10 +270,10 @@ export default function Projects() {
                       {proj.tag}
                     </span>
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-white mt-4">{proj.title}</h3>
                   <p className="text-xs text-zinc-400 mt-2 leading-relaxed">{proj.description}</p>
-                  
+
                   {/* Key points */}
                   <ul className="mt-4 flex flex-col gap-1.5">
                     {proj.achievements.map((ach, aIdx) => (
