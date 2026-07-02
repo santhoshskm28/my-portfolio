@@ -16,21 +16,21 @@ export default function ResumeSection() {
     {
       title: "MERN Resume",
       role: "MERN Stack Developer",
-      file: "/santhosh_kumar_mern_resume.pdf",
+      file: "https://drive.google.com/file/d/1CsjN4QtLEHTqMDwbaT4roQ__3xz60Lz7/view?usp=sharing",
       focus: ["React & Next.js", "Node.js & Express", "MongoDB Schema Design", "REST API Development"],
       color: "border-neon-blue/20 hover:border-neon-blue/40"
     },
     {
       title: "Frontend Resume",
       role: "React & UI Engineer",
-      file: "/santhosh_kumar_frontend_resume.pdf",
+      file: "https://drive.google.com/file/d/1EfVdN3UUnu9ZVwg5U4cW4nhNIAkafywp/view",
       focus: ["Tailwind & CSS Animations", "Framer Motion & GSAP", "Responsive Layout Architecture", "Performance Optimization"],
       color: "border-neon-purple/20 hover:border-neon-purple/40"
     },
     {
       title: "Generative AI Resume",
       role: "Generative AI Engineer",
-      file: "/santhosh_kumar_ai_resume.pdf",
+      file: "https://drive.google.com/file/d/1sjKsQCKn9y2es-MkBVglezSg_BMQNNQ4/view",
       focus: ["LLM API Integrations", "Agentic Decision Loops", "Model Context Protocol", "Prompt Engineering & XML"],
       color: "border-neon-pink/20 hover:border-neon-pink/40"
     }
@@ -109,10 +109,11 @@ export default function ResumeSection() {
 
             <a
               href={item.file}
-              download
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white hover:text-black hover:border-white text-white text-xs font-bold transition-all duration-300"
             >
-              Download PDF <Download className="h-3.5 w-3.5" />
+              View PDF <Download className="h-3.5 w-3.5" />
             </a>
           </motion.div>
         ))}
