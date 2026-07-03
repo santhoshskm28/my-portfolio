@@ -8,56 +8,74 @@ interface PipelineStage {
   icon: React.ReactNode;
   description: string;
   badge: string;
+  accent: string;
+  bg: string;
+  border: string;
 }
 
 export default function AIShowcase() {
   const stages: PipelineStage[] = [
     {
       title: "Prompt",
-      icon: <Terminal className="h-5 w-5 text-neon-blue" />,
+      icon: <Terminal className="h-4.5 w-4.5" />,
       description: "Structured inputs using XML constraints and context boundaries.",
-      badge: "Few-Shot"
+      badge: "Few-Shot",
+      accent: "text-neon-blue",
+      bg: "bg-neon-blue/10",
+      border: "border-neon-blue/20"
     },
     {
-      title: "LLM",
-      icon: <Cpu className="h-5 w-5 text-neon-purple" />,
+      title: "LLM Orchestration",
+      icon: <Cpu className="h-4.5 w-4.5" />,
       description: "State-of-the-art models translating intent and formatting schemas.",
-      badge: "Gemini / Claude"
+      badge: "Gemini & Claude",
+      accent: "text-neon-purple",
+      bg: "bg-neon-purple/10",
+      border: "border-neon-purple/20"
     },
     {
-      title: "Agent",
-      icon: <Settings className="h-5 w-5 text-neon-pink" />,
+      title: "Agent Loop",
+      icon: <Settings className="h-4.5 w-4.5" />,
       description: "Autonomous reasoning loop coordinating tool call branches.",
-      badge: "AGY SDK / ReAct"
+      badge: "ReAct Pattern",
+      accent: "text-neon-pink",
+      bg: "bg-neon-pink/10",
+      border: "border-neon-pink/20"
     },
     {
-      title: "Tool",
-      icon: <Wrench className="h-5 w-5 text-cyber-green" />,
+      title: "Tool Execution",
+      icon: <Wrench className="h-4.5 w-4.5" />,
       description: "System commands, database writes, and MCP-supported resources.",
-      badge: "MCP Servers"
+      badge: "MCP Servers",
+      accent: "text-cyber-green",
+      bg: "bg-cyber-green/10",
+      border: "border-cyber-green/20"
     },
     {
-      title: "Response",
-      icon: <MessageSquareCode className="h-5 w-5 text-neon-blue" />,
+      title: "Response Output",
+      icon: <MessageSquareCode className="h-4.5 w-4.5" />,
       description: "Compiled code files, verified terminal outputs, or JSON formats.",
-      badge: "Final Output"
+      badge: "State Verification",
+      accent: "text-neon-blue",
+      bg: "bg-neon-blue/10",
+      border: "border-neon-blue/20"
     }
   ];
 
   const aiSkills = [
     { name: "Prompt Engineering", detail: "XML boundaries, system prompt templates, few-shot inputs, context optimization." },
     { name: "Model Context Protocol", detail: "Configuring and exposing local terminal execution and file context endpoints to LLMs." },
-    { name: "AI Agents", detail: "Building autonomous feedback loops (Plan → Execute → Verify) using structured schemas." },
-    { name: "Claude & Gemini", detail: "Deep API integrations, JSON structured mode execution, and multimodal model calls." },
-    { name: "Antigravity & Cursor", detail: "Maximizing agentic workspace flows, semantic code indexing, and terminal automation." }
+    { name: "AI Agent Design", detail: "Building autonomous feedback loops (Plan → Execute → Verify) using structured schemas." },
+    { name: "Deep API Integrations", detail: "API setups, JSON structured mode execution, and multimodal model calls." },
+    { name: "IDE Automation", detail: "Maximizing agentic workspace flows, semantic code indexing, and terminal execution." }
   ];
 
   return (
     <section id="ai-showcase" className="relative py-24 px-4 md:px-8 max-w-6xl mx-auto z-10">
       {/* Section Title */}
-      <div className="flex flex-col items-center mb-16 text-center">
+      <div className="flex flex-col items-center mb-20 text-center">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
+          initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           className="text-xs font-bold uppercase tracking-widest text-neon-blue px-3 py-1 rounded-full bg-neon-blue/10 border border-neon-blue/20 mb-3"
@@ -69,9 +87,9 @@ export default function AIShowcase() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.1 }}
-          className="text-3xl sm:text-5xl font-extrabold text-white"
+          className="font-display text-3xl sm:text-5xl font-extrabold text-white"
         >
-          AI Engineering Pipeline
+          AI Engineering Labs
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 15 }}
@@ -84,19 +102,19 @@ export default function AIShowcase() {
         </motion.p>
       </div>
 
-      {/* Animated Pipeline Pipeline */}
-      <div className="relative mb-16 p-8 rounded-3xl glassmorphism border border-white/5 overflow-hidden">
-        {/* Pulsing pipeline line behind elements (desktop only) */}
-        <div className="hidden md:block absolute top-1/2 left-12 right-12 h-1 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink opacity-20 -translate-y-1/2 -z-10" />
+      {/* Animated Pipeline Tray Dashboard */}
+      <div className="relative mb-16 p-6 sm:p-8 rounded-3xl bg-white/[0.015] border border-white/[0.05] overflow-hidden shadow-[0_15px_45px_rgba(0,0,0,0.5)]">
+        {/* Glowing pipeline line behind elements (desktop only) */}
+        <div className="hidden md:block absolute top-[90px] left-12 right-12 h-[1px] bg-white/5 -z-10" />
 
-        {/* Traveling glowing particle (desktop only) */}
+        {/* Traveling glowing particle packet (desktop only) */}
         <motion.div
-          className="hidden md:block absolute top-[52%] left-10 h-3 w-3 rounded-full bg-neon-blue shadow-[0_0_15px_#00f0ff,0_0_30px_#00f0ff] -translate-y-1/2 -z-10"
+          className="hidden md:block absolute top-[89.5px] left-10 h-2 w-2 rounded-full bg-neon-blue shadow-[0_0_12px_#00f0ff,0_0_24px_#00f0ff] -translate-y-1/2 -z-10"
           animate={{
-            left: ["6%", "91%"]
+            left: ["5%", "93%"]
           }}
           transition={{
-            duration: 5,
+            duration: 4,
             repeat: Infinity,
             ease: "easeInOut"
           }}
@@ -106,26 +124,29 @@ export default function AIShowcase() {
           {stages.map((stage, idx) => (
             <motion.div
               key={stage.title}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 * idx }}
-              className="p-5 rounded-2xl bg-black/50 border border-white/5 flex flex-col items-center text-center gap-3 relative"
+              transition={{ delay: 0.08 * idx, duration: 0.5 }}
+              className="p-5 rounded-2xl bg-[#0f172a]/40 border border-white/[0.04] flex flex-col items-center text-center gap-3.5 relative hover:border-white/15 transition-all duration-300 shadow-[0_4px_25px_rgba(0,0,0,0.2)]"
             >
-              <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 shadow-inner">
+              <div className={`p-2.5 rounded-xl border flex items-center justify-center ${stage.accent} ${stage.bg} ${stage.border}`}>
                 {stage.icon}
               </div>
-              <h3 className="text-lg font-extrabold text-white mt-1">{stage.title}</h3>
-              <span className="text-[10px] font-bold text-neon-purple uppercase tracking-wider bg-neon-purple/10 px-2 py-0.5 rounded border border-neon-purple/20">
+              
+              <h3 className="font-display text-base font-extrabold text-white mt-1 leading-tight">{stage.title}</h3>
+              
+              <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border ${stage.accent} ${stage.bg} ${stage.border}`}>
                 {stage.badge}
               </span>
-              <p className="text-[11px] text-zinc-500 mt-2 leading-relaxed">
+              
+              <p className="text-[11px] text-zinc-400 mt-2 leading-relaxed font-sans">
                 {stage.description}
               </p>
 
-              {/* Mobile Arrow down spacer */}
+              {/* Mobile Separator */}
               {idx < stages.length - 1 && (
-                <div className="md:hidden text-zinc-700 text-lg font-bold my-1">
+                <div className="md:hidden text-zinc-700 text-sm font-bold my-1">
                   ↓
                 </div>
               )}
@@ -134,7 +155,7 @@ export default function AIShowcase() {
         </div>
       </div>
 
-      {/* AI skills display grid */}
+      {/* AI Skills Bento Display */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {aiSkills.map((skill, idx) => (
           <motion.div
@@ -142,11 +163,11 @@ export default function AIShowcase() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.05 * idx }}
-            className="p-5 rounded-2xl glassmorphism-card border border-white/5 hover:border-neon-blue/30"
+            transition={{ delay: 0.05 * idx, duration: 0.5 }}
+            className="p-5 rounded-2xl bg-white/[0.015] border border-white/[0.05] hover:border-neon-blue/30 hover:bg-white/[0.03] transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.25)] flex flex-col justify-between"
           >
-            <h3 className="font-extrabold text-white text-sm tracking-wide">{skill.name}</h3>
-            <p className="text-[11px] text-zinc-500 mt-3 leading-relaxed">{skill.detail}</p>
+            <h3 className="font-display font-bold text-white text-xs tracking-wider uppercase">{skill.name}</h3>
+            <p className="text-[10px] text-zinc-500 mt-3.5 leading-relaxed font-sans">{skill.detail}</p>
           </motion.div>
         ))}
       </div>

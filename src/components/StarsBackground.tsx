@@ -8,13 +8,13 @@ export default function StarsBackground() {
   const pointsRef = useRef<THREE.Points>(null);
 
   const [positions, colors] = useMemo(() => {
-    const count = 3000;
+    const count = 4000;
     const pos = new Float32Array(count * 3);
     const cols = new Float32Array(count * 3);
 
     for (let i = 0; i < count; i++) {
-      // Procedurally generate positions in a large space radius (25 to 100 units)
-      const r = 25 + Math.random() * 75;
+      // Position coordinates distributed in a large sphere (radius 30 to 120 units)
+      const r = 30 + Math.random() * 90;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 2 - 1);
 
@@ -22,23 +22,28 @@ export default function StarsBackground() {
       pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       pos[i * 3 + 2] = r * Math.cos(phi);
 
-      // Star color distributions (cyan, purple, soft white)
+      // Cyber Colors: Cyan, Purple, Slate-Blue, and Soft White
       const colorRand = Math.random();
-      if (colorRand > 0.85) {
-        // Neon Blue
+      if (colorRand > 0.9) {
+        // Deep Cyan
         cols[i * 3] = 0.0;
-        cols[i * 3 + 1] = 0.94;
+        cols[i * 3 + 1] = 0.8;
         cols[i * 3 + 2] = 1.0;
-      } else if (colorRand > 0.7) {
-        // Neon Purple
-        cols[i * 3] = 0.74;
-        cols[i * 3 + 1] = 0.0;
+      } else if (colorRand > 0.8) {
+        // Soft Purple/Violet
+        cols[i * 3] = 0.65;
+        cols[i * 3 + 1] = 0.2;
         cols[i * 3 + 2] = 1.0;
+      } else if (colorRand > 0.6) {
+        // Muted Indigo
+        cols[i * 3] = 0.3;
+        cols[i * 3 + 1] = 0.4;
+        cols[i * 3 + 2] = 0.8;
       } else {
-        // Soft Star White
-        cols[i * 3] = 0.9;
-        cols[i * 3 + 1] = 0.9;
-        cols[i * 3 + 2] = 1.0;
+        // Dim Star White
+        cols[i * 3] = 0.85;
+        cols[i * 3 + 1] = 0.85;
+        cols[i * 3 + 2] = 0.95;
       }
     }
     return [pos, cols];
@@ -46,8 +51,9 @@ export default function StarsBackground() {
 
   useFrame((state, delta) => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.012;
-      pointsRef.current.rotation.x += delta * 0.004;
+      // Extremely slow rotation for cinematic calmness
+      pointsRef.current.rotation.y += delta * 0.004;
+      pointsRef.current.rotation.x += delta * 0.001;
     }
   });
 
@@ -64,11 +70,11 @@ export default function StarsBackground() {
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.15}
+        size={0.06}
         sizeAttenuation={true}
         vertexColors={true}
         transparent={true}
-        opacity={0.8}
+        opacity={0.5}
         blending={THREE.AdditiveBlending}
         depthWrite={false}
       />

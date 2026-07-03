@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Billboard, Text } from "@react-three/drei";
+import { Billboard, Text, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 interface SkillItem {
@@ -31,15 +31,15 @@ const skills: SkillItem[] = [
   { name: "Cursor", category: "ai" },
   { name: "Antigravity", category: "ai" },
   { name: "MCP", category: "ai" },
-  { name: "Prompt Eng.", category: "ai" }
+  { name: "Prompt Eng.", category: "ai" },
 ];
 
-const categoryColors = {
-  frontend: "#00f0ff", // Neon Blue
-  backend: "#bd00ff",  // Neon Purple
-  database: "#ff007a", // Neon Pink
-  cloud: "#39ff14",    // Cyber Green
-  ai: "#00f0ff"        // Neon Blue
+const categoryColors: Record<SkillItem["category"], string> = {
+  frontend: "#00f0ff",
+  backend: "#bd00ff",
+  database: "#ff007a",
+  cloud: "#39ff14",
+  ai: "#60a5fa",
 };
 
 function SkillTag({
@@ -47,37 +47,39 @@ function SkillTag({
   category,
   pos,
   onHover,
-  activeName
+  activeName,
 }: {
   name: string;
-  category: "frontend" | "backend" | "database" | "cloud" | "ai";
+  category: SkillItem["category"];
   pos: THREE.Vector3;
   onHover: (name: string | null) => void;
   activeName: string | null;
 }) {
-  const textRef = useRef<any>(null);
   const [hovered, setHovered] = useState(false);
-
   const isActive = activeName === name;
-  const color = hovered || isActive ? "#ffffff" : categoryColors[category];
-  const scale = hovered || isActive ? 1.3 : 1.0;
+  const baseColor = categoryColors[category];
+  const displayColor = hovered || isActive ? "#ffffff" : baseColor;
+  const scale = hovered || isActive ? 1.35 : 1.0;
 
   return (
     <Billboard position={pos}>
       <Text
-        ref={textRef}
-        fontSize={0.28}
-        color={color}
+        fontSize={0.26}
+        color={displayColor}
         anchorX="center"
         anchorY="middle"
         scale={[scale, scale, scale]}
+        // Add a subtle outline so text reads against any bg
+        outlineColor="#000000"
+        outlineOpacity={0.6}
+        outlineWidth={0.015}
         onPointerOver={(e) => {
           e.stopPropagation();
           setHovered(true);
           onHover(name);
           document.body.style.cursor = "pointer";
         }}
-        onPointerOut={(e) => {
+        onPointerOut={() => {
           setHovered(false);
           onHover(null);
           document.body.style.cursor = "auto";
@@ -89,48 +91,59 @@ function SkillTag({
   );
 }
 
+function GlobeWireframe() {
+  const meshRef = useRef<THREE.Mesh>(null);
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[2.2, 18, 18]} />
+      <meshBasicMaterial
+        color="#60a5fa"
+        wireframe
+        transparent
+        opacity={0.04}
+      />
+    </mesh>
+  );
+}
+
 function SphereGlobe({
   onHoverSkill,
-  activeSkill
+  activeSkill,
+  isDragging,
 }: {
   onHoverSkill: (name: string | null) => void;
   activeSkill: string | null;
+  isDragging: boolean;
 }) {
   const groupRef = useRef<THREE.Group>(null);
 
-  // Distribute points evenly on a sphere using Fibonacci Lattice
   const tags = useMemo(() => {
-    const tempTags = [];
     const count = skills.length;
     const radius = 2.4;
-
-    for (let i = 0; i < count; i++) {
+    return skills.map((skill, i) => {
       const k = i + 0.5;
       const phi = Math.acos(1 - (2 * k) / count);
       const theta = Math.PI * (1 + Math.sqrt(5)) * k;
-
-      const x = radius * Math.sin(phi) * Math.cos(theta);
-      const y = radius * Math.sin(phi) * Math.sin(theta);
-      const z = radius * Math.cos(phi);
-
-      tempTags.push({
-        ...skills[i],
-        pos: new THREE.Vector3(x, y, z)
-      });
-    }
-    return tempTags;
+      return {
+        ...skill,
+        pos: new THREE.Vector3(
+          radius * Math.sin(phi) * Math.cos(theta),
+          radius * Math.sin(phi) * Math.sin(theta),
+          radius * Math.cos(phi)
+        ),
+      };
+    });
   }, []);
 
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      // Automatic rotation of the sphere
-      groupRef.current.rotation.y += delta * 0.15;
-      groupRef.current.rotation.x += delta * 0.05;
+  useFrame((_, delta) => {
+    if (groupRef.current && !isDragging) {
+      groupRef.current.rotation.y += delta * 0.18;
     }
   });
 
   return (
     <group ref={groupRef}>
+      <GlobeWireframe />
       {tags.map((tag, idx) => (
         <SkillTag
           key={idx}
@@ -147,17 +160,48 @@ function SphereGlobe({
 
 export default function SkillsGlobe({
   onHoverSkill,
-  activeSkill
+  activeSkill,
 }: {
   onHoverSkill: (name: string | null) => void;
   activeSkill: string | null;
 }) {
+  const [isDragging, setIsDragging] = useState(false);
+
   return (
-    <div className="h-[350px] sm:h-[450px] w-full cursor-grab active:cursor-grabbing">
-      <Canvas camera={{ position: [0, 0, 4.5], fov: 60 }} gl={{ alpha: true }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1.0} />
-        <SphereGlobe onHoverSkill={onHoverSkill} activeSkill={activeSkill} />
+    <div
+      className="h-[380px] sm:h-[460px] w-full cursor-grab active:cursor-grabbing"
+      onMouseDown={() => setIsDragging(true)}
+      onMouseUp={() => setIsDragging(false)}
+      onMouseLeave={() => setIsDragging(false)}
+    >
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 58 }}
+        style={{ background: "transparent" }}
+        gl={{
+          alpha: true,
+          antialias: true,
+          powerPreference: "high-performance",
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
+      >
+        <ambientLight intensity={0.6} />
+        <pointLight position={[10, 10, 10]} intensity={1.2} />
+        <pointLight position={[-10, -5, -10]} color="#8b5cf6" intensity={0.4} />
+        <SphereGlobe
+          onHoverSkill={onHoverSkill}
+          activeSkill={activeSkill}
+          isDragging={isDragging}
+        />
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          autoRotate={false}
+          rotateSpeed={0.55}
+          minPolarAngle={Math.PI * 0.2}
+          maxPolarAngle={Math.PI * 0.8}
+        />
       </Canvas>
     </div>
   );

@@ -7,27 +7,32 @@ import StarsBackground from "./StarsBackground";
 import HologramAvatar from "./HologramAvatar";
 import CyberBuilding from "./CyberBuilding";
 
-// Define the camera position keyframes mapped to scroll positions
+// Camera positions/lookAt keyframes mapped to sections
 // Section indices: 0 = Hero, 1 = About, 2 = Skills, 3 = Experience, 4 = Projects, 5 = AI Showcase, 6 = Achievements, 7 = Contact
 const keyframes = [
-  { pos: [0, 0, 5.5], lookAt: [0, 0, 0] },      // Section 0: Hero (Avatar centered)
-  { pos: [3.2, 1.8, 6.0], lookAt: [0, 0, 0] },  // Section 1: About Me (Avatar from high angle)
-  { pos: [-3.5, 0.5, 5.5], lookAt: [0, 0, 0] },  // Section 2: Skills (Camera shifted, looking at center space)
-  { pos: [-2.0, 1.0, 5.0], lookAt: [1.8, 0, 0] }, // Section 3: Experience (Looking at CyberBuilding on the right)
-  { pos: [0, -3.2, 5.5], lookAt: [0, -3.2, 0] }, // Section 4: Projects (Looking down at floating project worlds)
-  { pos: [3.5, 0, 6.0], lookAt: [-1.0, 0.5, 0] },// Section 5: AI Showcase / Pipeline
-  { pos: [-3.0, -1.5, 5.5], lookAt: [0, -0.5, 0] },// Section 6: Achievements
-  { pos: [0, 0, 5.0], lookAt: [0, 0, 0] }       // Section 7: Contact (Back to center glow)
+  { pos: [0, 0, 5.2], lookAt: [0, 0, 0] },       // Section 0: Hero (Crystal centered)
+  { pos: [2.8, 1.5, 6.0], lookAt: [0, 0, 0] },   // Section 1: About Me (High angle view)
+  { pos: [-3.2, 0.4, 5.5], lookAt: [0, 0, 0] },  // Section 2: Skills (Shifted view)
+  { pos: [-1.8, 0.8, 4.8], lookAt: [1.6, 0, 0] }, // Section 3: Experience (Focusing building on right)
+  { pos: [0, -3.0, 5.2], lookAt: [0, -3.0, 0] },  // Section 4: Projects (Looking down)
+  { pos: [3.2, 0, 5.8], lookAt: [-0.8, 0.4, 0] }, // Section 5: AI Showcase
+  { pos: [-2.6, -1.2, 5.2], lookAt: [0, -0.4, 0] },// Section 6: Achievements
+  { pos: [0, 0, 4.8], lookAt: [0, 0, 0] }        // Section 7: Contact (Close-up center)
 ];
 
-// Inner component to access Canvas context (useFrame, camera, etc.)
 function SceneController({ currentSection }: { currentSection: number }) {
   const { camera } = useThree();
   const lookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
   const avatarGroupRef = useRef<THREE.Group>(null);
   const buildingGroupRef = useRef<THREE.Group>(null);
+  const gridRef = useRef<THREE.GridHelper>(null);
+
+  const lightRef1 = useRef<THREE.PointLight>(null);
+  const lightRef2 = useRef<THREE.PointLight>(null);
 
   useFrame((state, delta) => {
+    const time = state.clock.getElapsedTime();
+
     // 1. Interpolate camera position and lookAt target based on continuous currentSection
     const sectionIndex = Math.min(Math.max(Math.floor(currentSection), 0), keyframes.length - 1);
     const nextSectionIndex = Math.min(sectionIndex + 1, keyframes.length - 1);
@@ -36,7 +41,6 @@ function SceneController({ currentSection }: { currentSection: number }) {
     const startKF = keyframes[sectionIndex];
     const endKF = keyframes[nextSectionIndex];
 
-    // Compute target position and lookAt vector
     const targetPos = new THREE.Vector3(
       THREE.MathUtils.lerp(startKF.pos[0], endKF.pos[0], t),
       THREE.MathUtils.lerp(startKF.pos[1], endKF.pos[1], t),
@@ -49,35 +53,49 @@ function SceneController({ currentSection }: { currentSection: number }) {
       THREE.MathUtils.lerp(startKF.lookAt[2], endKF.lookAt[2], t)
     );
 
-    // Apply smooth damping (lerping current camera values toward target values)
-    camera.position.lerp(targetPos, 0.06);
-    lookAtRef.current.lerp(targetLook, 0.06);
+    // Apply smooth damping lerping
+    camera.position.lerp(targetPos, 0.05);
+    lookAtRef.current.lerp(targetLook, 0.05);
     camera.lookAt(lookAtRef.current);
 
-    // 2. Control visibility and scale of elements based on scroll section progress
-    // Avatar is visible in Section 0 (Hero) & Section 1 (About), starts shrinking at Section 1.5 and is hidden by Section 2
+    // 2. Animate dynamic floating point lights to create slow-moving color gradients
+    if (lightRef1.current) {
+      lightRef1.current.position.x = Math.sin(time * 0.4) * 6;
+      lightRef1.current.position.y = Math.cos(time * 0.3) * 4;
+      lightRef1.current.position.z = Math.sin(time * 0.2) * 2 + 3;
+    }
+    if (lightRef2.current) {
+      lightRef2.current.position.x = Math.cos(time * 0.35) * -6;
+      lightRef2.current.position.y = Math.sin(time * 0.5) * -4;
+      lightRef2.current.position.z = Math.cos(time * 0.15) * 2 + 2;
+    }
+
+    // 3. Rotate grid base slowly
+    if (gridRef.current) {
+      gridRef.current.rotation.y = time * 0.02;
+    }
+
+    // 4. Scale and position elements based on scroll section
     if (avatarGroupRef.current) {
       if (currentSection < 1.0) {
         avatarGroupRef.current.scale.set(1, 1, 1);
         avatarGroupRef.current.position.set(0, 0, 0);
       } else if (currentSection >= 1.0 && currentSection < 2.0) {
-        const s = 1.0 - (currentSection - 1.0); // 1 to 0 scale
+        const s = 1.0 - (currentSection - 1.0);
         avatarGroupRef.current.scale.set(s, s, s);
-        // Move it slightly left as it shrinks
         avatarGroupRef.current.position.set(-(currentSection - 1.0) * 1.5, 0, 0);
       } else {
         avatarGroupRef.current.scale.set(0, 0, 0);
       }
     }
 
-    // CyberBuilding is visible in Section 3 (Experience). Fades in from Section 2.2, scales down after Section 3.8
     if (buildingGroupRef.current) {
       if (currentSection >= 2.0 && currentSection < 3.0) {
-        const s = currentSection - 2.0; // 0 to 1 scale
+        const s = currentSection - 2.0;
         buildingGroupRef.current.scale.set(s, s, s);
         buildingGroupRef.current.position.set(1.8, 0, 0);
       } else if (currentSection >= 3.0 && currentSection < 4.0) {
-        const s = 1.0 - (currentSection - 3.0) * 0.8; // Shrink slightly as we scroll past
+        const s = 1.0 - (currentSection - 3.0) * 0.8;
         const scaleVal = Math.max(s, 0.2);
         buildingGroupRef.current.scale.set(scaleVal, scaleVal, scaleVal);
         buildingGroupRef.current.position.set(1.8, -(currentSection - 3.0) * 1.5, 0);
@@ -89,12 +107,21 @@ function SceneController({ currentSection }: { currentSection: number }) {
 
   return (
     <>
-      <ambientLight intensity={0.2} />
-      <pointLight position={[10, 10, 10]} intensity={1.5} color="#00f0ff" />
-      <pointLight position={[-10, -10, -10]} intensity={1.0} color="#bd00ff" />
+      <ambientLight intensity={0.25} />
+      
+      {/* Dynamic gradient point lights */}
+      <pointLight ref={lightRef1} intensity={2.0} color="#00f0ff" distance={15} />
+      <pointLight ref={lightRef2} intensity={1.8} color="#bd00ff" distance={15} />
 
       {/* Global Star Background */}
       <StarsBackground />
+
+      {/* Cyber grid ground helper */}
+      <gridHelper 
+        ref={gridRef} 
+        args={[80, 40, 0x334155, 0x1e293b]} 
+        position={[0, -3.5, 0]} 
+      />
 
       {/* Hero / About Hologram Avatar */}
       <group ref={avatarGroupRef}>
@@ -111,9 +138,9 @@ function SceneController({ currentSection }: { currentSection: number }) {
 
 export default function BackgroundCanvas({ currentSection }: { currentSection: number }) {
   return (
-    <div className="fixed inset-0 -z-10 h-screen w-screen overflow-hidden bg-[#020205]">
+    <div className="fixed inset-0 -z-10 h-screen w-screen overflow-hidden bg-[#030712]">
       <Canvas
-        camera={{ position: [0, 0, 5.5], fov: 60, near: 0.1, far: 1000 }}
+        camera={{ position: [0, 0, 5.2], fov: 60, near: 0.1, far: 1000 }}
         gl={{ antialias: true, alpha: false }}
       >
         <SceneController currentSection={currentSection} />
