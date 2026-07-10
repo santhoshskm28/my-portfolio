@@ -23,7 +23,7 @@ export default function ResumeSection() {
     {
       title: "Frontend Resume",
       role: "React & UI Engineer",
-      file: "https://drive.google.com/file/d/1EfVdN3UUnu9ZVwg5U4cW4nhNIAkafywp/view",
+      file: "https://drive.google.com/file/d/12wNRSkQ-SOoanUU0tiO54QpBlVFenaCW/view?usp=sharing",
       focus: ["Tailwind & CSS Animations", "Framer Motion & GSAP", "Responsive Layout Architecture", "Performance Optimization"],
       color: "hover:border-neon-purple/40"
     },
