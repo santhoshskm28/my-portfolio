@@ -47,7 +47,7 @@ export default function Projects() {
       tech: [
         "React", "Tailwind CSS", "HTML5", "CSS3", "Framer Motion", "Vite"
       ],
-      liveLink: "https://orcastudios.example.com",
+      liveLink: "https://orcastudios.netlify.app/",
       githubLink: "https://github.com/santhoshskm28/orca-studios"
     },
     {
